@@ -1,0 +1,19 @@
+{
+  "name": "auto-jobcan",
+  "version": "1.0.0",
+  "description": "my auto jobcan",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/xuanlinh91/auto-jobcan.git"
+  },
+  "author": "Nguyen Xuan Linh <linh.nguyen@playnext-lab.co.jp> (https://github.com/linhnguyen-pnl)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xuanlinh91/auto-jobcan/issues"
+  },
+  "homepage": "https://github.com/xuanlinh91/auto-jobcan#readme"
+}
