@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/xuanlinh91/auto-jobcan/issues"
   },
-  "homepage": "https://github.com/xuanlinh91/auto-jobcan#readme"
+  "homepage": "https://github.com/xuanlinh91/auto-jobcan#readme",
+  "dependencies": {
+    "@slack/web-api": "^5.14.0",
+    "axios": "^0.21.0",
+    "jsonp": "^0.2.1",
+    "puppeteer": "^5.5.0"
+  }
 }
