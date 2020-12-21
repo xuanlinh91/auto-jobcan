@@ -28,10 +28,16 @@ const holiday = {
 };
 
 const token = "xoxp-69753451537-973728075779-1585639265202-a2f1402e6a167ea2bc3197c87ef4bdde";
+const bot_token = "xoxb-69753451537-1589161877795-cNvXeaMWhuHLnNjWGtDV2YSS";
 // Initialize
 const web = new WebClient(token);
-
+const bot = new WebClient(bot_token);
+// si-kintai
 const conversationId = 'GGE3NAENR';
+
+const mySelfChannel = 'G01HPH3Q1ND';
+
+const me = 'DUP30DHJ5';
 // const conversationId = 'DUP30DHJ5';
 
 (async () => {
@@ -70,6 +76,23 @@ const conversationId = 'GGE3NAENR';
         console.log(`Successfully send message ${result.ts} in conversation ${conversationId}`);
     };
 
+    const notifyMe = async () => {
+      const result = await bot.chat.postMessage({
+        text: '<@UUMME27NX>　おはようございます。本日の業務を開始いたします。',
+        link_names: true,
+        channel: mySelfChannel,
+      });
+
+      const result = await bot.chat.postMessage({
+        text: 'おはようございます。本日の業務を開始いたします。',
+        // link_names: true,
+        channel: me,
+      });
+
+      // The result contains an identifier for the message, `ts`.
+      console.log(`Successfully send message ${result.ts} in conversation ${conversationId}`);
+    };
+
     let now = new Date();
     if (!isWorkingDay(now)) {
         console.log("Today is holiday");
@@ -85,7 +108,8 @@ const conversationId = 'GGE3NAENR';
     }
 
     const browser = await puppeteer.launch({
-        headless: false, defaultViewport: null});
+        // headless: true, args: ["--no-sandbox"]})
+        headless: true, executablePath: '/usr/bin/chromium-browser'})
     const page = await browser.newPage();
 
     await loginJobcan()
