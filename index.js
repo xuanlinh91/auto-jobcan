@@ -83,7 +83,7 @@ const me = 'DUP30DHJ5';
         channel: mySelfChannel,
       });
 
-      const result = await bot.chat.postMessage({
+      await bot.chat.postMessage({
         text: 'おはようございます。本日の業務を開始いたします。',
         // link_names: true,
         channel: me,
