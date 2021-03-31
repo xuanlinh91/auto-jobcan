@@ -94,6 +94,7 @@ const me = 'DUP30DHJ5';
     };
 
     let now = new Date();
+    console.log("");
     if (!isWorkingDay(now)) {
         console.log("Today is holiday");
         return false
@@ -129,6 +130,7 @@ const me = 'DUP30DHJ5';
     if (workingStatus === "未出勤" && isWorkingDay(now)) {
         await setWorkingStatus()
         browser.close();
-        await slackChat()
+        await slackChat();
+        await notifyMe();
     }
 })();
