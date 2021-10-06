@@ -42,22 +42,39 @@ const me = 'DUP30DHJ5';
 
 (async () => {
     const loginJobcan = async () => {
-        await page.goto('https://id.jobcan.jp/users/sign_in')
-        await page.type('#user_email', "linh.nguyen@playnext-lab.co.jp")
-        await page.type('#user_password', "Playnext@123")
-        await page.click('.form__login')
-        await page.waitForSelector('#jbc-app-links')
-        await page.goto('https://ssl.jobcan.jp/jbcoauth/login')
+
+        await page.goto('https://ssl.jobcan.jp/login/mb-employee?err=1&lang_code=ja')
+        await page.type('#client_id', "PNL")
+        await page.type('#email', "linh.nguyen@playnext-lab.co.jp")
+        await page.type('#password', "cZ22u5b3")
+        await page.click('button[type=submit]')
+        await page.waitForSelector('#tab')
+        await page.goto('https://ssl.jobcan.jp/m/work/accessrecord?_m=adit')
+        // await page.goto('https://id.jobcan.jp/users/sign_in')
+        // await page.type('#user_email', "linh.nguyen@playnext-lab.co.jp")
+        // await page.type('#user_password', "Playnext@123")
+        // await page.click('.form__login')
+        // await page.waitForSelector('#jbc-app-links')
+        // await page.goto('https://ssl.jobcan.jp/jbcoauth/login')
     }
 
     const setWorkingStatus = async () => {
-        await page.waitForSelector('#working_status')
-        await page.waitForSelector('#adit-button-push')
-        await page.click('#adit-button-push')
-        await page.waitFor(3000)
-        let statusDoubleCheck = await page.$eval('#working_status', el => el.innerHTML);
-        console.log("Status after click: ", statusDoubleCheck);
-        //Todo send notification
+        console.log("setWorkingStatus");
+        await page.waitForSelector('#adit_item_1');
+        await page.click('#adit_item_1');
+        // await page.waitFor(3000);
+        await page.waitForSelector('input[type=submit]#yes');
+        // await page.click('input[type=submit]#yes');
+        console.log("Dont click");
+        // let statusDoubleCheck = await page.$eval('#form1 > div:nth-of-type(2)', el => el.innerHTML);
+        // console.log("Status after click: ", statusDoubleCheck);
+
+        // await page.waitForSelector('#working_status')
+        // await page.waitForSelector('#adit-button-push')
+        // await page.click('#adit-button-push')
+        // await page.waitFor(3000)
+        // let statusDoubleCheck = await page.$eval('#working_status', el => el.innerHTML);
+        // console.log("Status after click: ", statusDoubleCheck);
     }
 
     const isWorkingDay = (day) => {
@@ -108,13 +125,25 @@ const me = 'DUP30DHJ5';
         return;
     }
 
-    const browser = await puppeteer.launch({
+    // const browser = await puppeteer.launch({
         // headless: true, args: ["--no-sandbox"]})
-        headless: true, executablePath: '/usr/bin/chromium-browser'})
+        // headless: true, executablePath: '/usr/bin/chromium-browser'})
+    const browser = await puppeteer.launch({headless:false});
+    const devices = puppeteer.devices;
+    const iPhone = devices['iPhone 7'];
     const page = await browser.newPage();
+    await page.emulate(iPhone);
+    // grant permission
+    const context = browser.defaultBrowserContext()
+    await context.overridePermissions("https://ssl.jobcan.jp/m/work/accessrecord?_m=adit", ['geolocation'])
+    //set the location
+    await page.setGeolocation({latitude:35.66, longitude:139.86})
 
     await loginJobcan()
-    const workingStatus = await page.$eval('#working_status', el => el.innerHTML);
+    // const workingStatus = await page.$eval('#working_status', el => el.innerHTML);
+    const workingStatus = await page.$eval('#form1 > div:nth-of-type(2)', el => el.innerHTML);
+    console.log("workingStatus");
+    console.log(workingStatus);
     if (!workingStatus) {
         console.log("Can not get working status info");
         browser.close();
@@ -127,8 +156,10 @@ const me = 'DUP30DHJ5';
         return false
     }
 
+    console.log("gd 1");
     if (workingStatus === "未出勤" && isWorkingDay(now)) {
-        await setWorkingStatus()
+        console.log("gd 2");
+        await setWorkingStatus();
         browser.close();
         await slackChat();
         await notifyMe();
