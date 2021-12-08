@@ -64,8 +64,8 @@ const me = 'DUP30DHJ5';
         await page.click('#adit_item_1');
         // await page.waitFor(3000);
         await page.waitForSelector('input[type=submit]#yes');
-        // await page.click('input[type=submit]#yes');
-        console.log("Dont click");
+        await page.click('input[type=submit]#yes');
+        // todo click modoru
         // let statusDoubleCheck = await page.$eval('#form1 > div:nth-of-type(2)', el => el.innerHTML);
         // console.log("Status after click: ", statusDoubleCheck);
 
@@ -111,7 +111,6 @@ const me = 'DUP30DHJ5';
     };
 
     let now = new Date();
-    console.log("");
     if (!isWorkingDay(now)) {
         console.log("Today is holiday");
         return false
@@ -125,10 +124,10 @@ const me = 'DUP30DHJ5';
         return;
     }
 
-    // const browser = await puppeteer.launch({
+    const browser = await puppeteer.launch({
         // headless: true, args: ["--no-sandbox"]})
-        // headless: true, executablePath: '/usr/bin/chromium-browser'})
-    const browser = await puppeteer.launch({headless:false});
+        headless: true, executablePath: '/usr/bin/chromium-browser'})
+    // const browser = await puppeteer.launch({headless:false});
     const devices = puppeteer.devices;
     const iPhone = devices['iPhone 7'];
     const page = await browser.newPage();
@@ -146,21 +145,19 @@ const me = 'DUP30DHJ5';
     console.log(workingStatus);
     if (!workingStatus) {
         console.log("Can not get working status info");
-        browser.close();
+        await browser.close();
         return false
     }
 
     if (workingStatus === "勤務中") {
         console.log("Working status has been set already: ", workingStatus);
-        browser.close();
+        await browser.close();
         return false
     }
 
-    console.log("gd 1");
     if (workingStatus === "未出勤" && isWorkingDay(now)) {
-        console.log("gd 2");
         await setWorkingStatus();
-        browser.close();
+        await browser.close();
         await slackChat();
         await notifyMe();
     }
