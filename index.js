@@ -136,7 +136,7 @@ const me = 'DUP30DHJ5';
     const context = browser.defaultBrowserContext()
     await context.overridePermissions("https://ssl.jobcan.jp/m/work/accessrecord?_m=adit", ['geolocation'])
     //set the location
-    await page.setGeolocation({latitude:35.6553887, longitude:139.8670489})
+    await page.setGeolocation({latitude:35.66204275692751, longitude:139.86570839565226})
 
     await loginJobcan()
     // const workingStatus = await page.$eval('#working_status', el => el.innerHTML);
