@@ -48,7 +48,7 @@ const me = 'DUP30DHJ5';
         // grant permission
         const context = browser.defaultBrowserContext()
         await context.overridePermissions("https://ssl.jobcan.jp/m/work/accessrecord?_m=adit", ['geolocation'])
-        //set the location
+        //set the location to your home
         await page.setGeolocation({latitude: 35.66204275692751, longitude: 139.86570839565226})
         const devices = puppeteer.devices;
         const iPhone = devices['iPhone 7'];
@@ -95,17 +95,12 @@ const me = 'DUP30DHJ5';
         // console.log("Status after click: ", statusDoubleCheck);
     }
 
-    // const isWorkingDay = (day) => {
-    //     let isoDate = day.toISOString().substring(0, 10);
-    //     if (day.getDay() !== 0 && day.getDay() !== 6 && !(isoDate in holiday)) {
-    //         return true;
-    //     } else return false;
-    // }
-
     const isHoliday = (day) => {
-        return holidays.find(element => element[0] === day.getFullYear()
+        let found = holidays.find(element => element[0] === day.getFullYear()
             && element[1] === (day.getMonth() + 1)
-            && element[2] === day.getDate())
+            && element[2] === day.getDate());
+
+        return (day.getDay() !== 0 && day.getDay() !== 6 && found !== undefined);
     }
 
     const getHolidays = async () => {
@@ -122,6 +117,9 @@ const me = 'DUP30DHJ5';
                 holidays.push(date);
             }
         }
+
+        console.log("Holiday lists:");
+        console.log(holidays);
     }
 
     const slackChat = async () => {
@@ -184,7 +182,7 @@ const me = 'DUP30DHJ5';
         return false;
     }
 
-    if (workingStatus === "未出勤" && !isHoliday(new Date())) {
+    if (workingStatus === "未出勤") {
         await setWorkingStatus(mobilePage);
         await browser.close();
         await slackChat();
