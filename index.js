@@ -2,31 +2,6 @@ const puppeteer = require('puppeteer');
 const {WebClient} = require('@slack/web-api');
 const axios = require('axios');
 const moment = require("moment");
-const holiday = {
-    "2020-11-03": "文化の日",
-    "2020-11-23": "勤労感謝の日",
-    "2020-12-28": "x",
-    "2020-12-29": "x",
-    "2020-12-30": "x",
-    "2020-12-31": "x",
-    "2021-01-01": "元日",
-    "2021-01-11": "成人の日",
-    "2021-02-11": "建国記念の日",
-    "2021-02-23": "天皇誕生日",
-    "2021-03-20": "春分の日",
-    "2021-04-29": "昭和の日",
-    "2021-05-03": "憲法記念日",
-    "2021-05-04": "みどりの日",
-    "2021-05-05": "こどもの日",
-    "2021-07-22": "海の日",
-    "2021-07-23": "体育の日",
-    "2021-08-08": "山の日",
-    "2021-08-09": "休日 山の日",
-    "2021-09-20": "敬老の日",
-    "2021-09-23": "秋分の日",
-    "2021-11-03": "文化の日",
-    "2021-11-23": "勤労感謝の日"
-};
 const holidays = [];
 
 const token = "xoxp-69753451537-973728075779-1585639265202-a2f1402e6a167ea2bc3197c87ef4bdde";
@@ -80,19 +55,19 @@ const me = 'DUP30DHJ5';
         console.log(`${moment().format()}: setWorkingStatus`);
         await page.waitForSelector('#adit_item_1');
         await page.click('#adit_item_1');
-        // await page.waitFor(3000);
         await page.waitForSelector('input[type=submit]#yes');
         await page.click('input[type=submit]#yes');
-        // todo click modoru
-        // let statusDoubleCheck = await page.$eval('#form1 > div:nth-of-type(2)', el => el.innerHTML);
-        // console.log("Status after click: ", statusDoubleCheck);
 
-        // await page.waitForSelector('#working_status')
-        // await page.waitForSelector('#adit-button-push')
-        // await page.click('#adit-button-push')
-        // await page.waitFor(3000)
-        // let statusDoubleCheck = await page.$eval('#working_status', el => el.innerHTML);
-        // console.log("Status after click: ", statusDoubleCheck);
+        console.log("Status after click: ", getWorkingStatus(page));
+    }
+
+    const getWorkingStatus = async (page) => {
+        console.log(`${moment().format()}: getWorkingStatus`);
+        await page.goto('https://ssl.jobcan.jp/m/work/accessrecord?_m=adit');
+        await page.waitForSelector('#form1');
+        let status = page.$eval('#form1 > div:nth-of-type(2)', el => el.innerHTML);
+        console.log(`${moment().format()}: ` + status);
+        return status;
     }
 
     const isHoliday = (day) => {
@@ -109,12 +84,22 @@ const me = 'DUP30DHJ5';
 
         const allDatesOfMonth = await pcPage.$$('#search-result .table-responsive .table.jbc-table.text-center tbody tr');
         for (const dateEl of allDatesOfMonth) {
+            // 祝日確認
             let item = await dateEl.$eval('td:nth-child(2)', el => el.innerText);
             if (item !== "") {
                 let href = await dateEl.$eval('td:first-child a', el => el.href);
                 let url = new URL(href);
                 let date = url.search.substring(1).split('&').map(day => +day.split('=')[1]);
                 holidays.push(date);
+            } else {
+                // 有給確認
+                let lastItem = await dateEl.$eval('td:last-child', el => el.innerText);
+                if (lastItem !== "" && lastItem === "有") {
+                    let href = await dateEl.$eval('td:first-child a', el => el.href);
+                    let url = new URL(href);
+                    let date = url.search.substring(1).split('&').map(day => +day.split('=')[1]);
+                    holidays.push(date);
+                }
             }
         }
 
@@ -163,12 +148,12 @@ const me = 'DUP30DHJ5';
     await getHolidays();
     if (isHoliday(new Date())) {
         console.log(`${moment().format()}: Today is holiday`);
+        await browser.close();
         return false;
     }
 
     let mobilePage = await loginJobcanMobile();
-    // const workingStatus = await page.$eval('#working_status', el => el.innerHTML);
-    const workingStatus = await mobilePage.$eval('#form1 > div:nth-of-type(2)', el => el.innerHTML);
+    const workingStatus = await getWorkingStatus(mobilePage);
     console.log(`${moment().format()}: workingStatus: `, workingStatus);
     if (!workingStatus) {
         console.log(`${moment().format()}: Can not get working status info`);
