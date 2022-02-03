@@ -100,7 +100,7 @@ const me = 'DUP30DHJ5';
             && element[1] === (day.getMonth() + 1)
             && element[2] === day.getDate());
 
-        return (day.getDay() !== 0 && day.getDay() !== 6 && found !== undefined);
+        return (day.getDay() === 0 || day.getDay() === 6 || found !== undefined);
     }
 
     const getHolidays = async () => {
