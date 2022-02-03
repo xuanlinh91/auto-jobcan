@@ -131,13 +131,13 @@ const me = 'DUP30DHJ5';
     };
 
 
-    let flagUrl = "https://docs.google.com/uc?export=download&id=173KRHfcTTGzDwSx0xvBSy_SmZSKOKO6K";
-    let result = await axios.get(flagUrl);
-    if (!result.data) {
-        // If flag is not enable then do nothing
-        console.log(`${moment().format()}: Disabled!`);
-        return;
-    }
+    // let flagUrl = "https://docs.google.com/uc?export=download&id=173KRHfcTTGzDwSx0xvBSy_SmZSKOKO6K";
+    // let result = await axios.get(flagUrl);
+    // if (!result.data) {
+    //     // If flag is not enable then do nothing
+    //     console.log(`${moment().format()}: Disabled!`);
+    //     return;
+    // }
 
     const browser = await puppeteer.launch({
         // headless: true, args: ["--no-sandbox"]})
