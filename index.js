@@ -57,8 +57,6 @@ const me = 'DUP30DHJ5';
         await page.click('#adit_item_1');
         await page.waitForSelector('input[type=submit]#yes');
         await page.click('input[type=submit]#yes');
-
-        console.log("Status after click: ", getWorkingStatus(page));
     }
 
     const getWorkingStatus = async (page) => {
@@ -66,7 +64,6 @@ const me = 'DUP30DHJ5';
         await page.goto('https://ssl.jobcan.jp/m/work/accessrecord?_m=adit');
         await page.waitForSelector('#form1');
         let status = page.$eval('#form1 > div:nth-of-type(2)', el => el.innerHTML);
-        console.log(`${moment().format()}: ` + status);
         return status;
     }
 
@@ -169,6 +166,8 @@ const me = 'DUP30DHJ5';
 
     if (workingStatus === "未出勤") {
         await setWorkingStatus(mobilePage);
+        const workingStatus = await getWorkingStatus(mobilePage);
+        console.log(`${moment().format()}: Status after click: `, workingStatus);
         await browser.close();
         await slackChat();
         await notifyMe();
