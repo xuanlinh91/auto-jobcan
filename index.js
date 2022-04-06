@@ -85,7 +85,7 @@ const me = 'DUP30DHJ5';
             let item = await dateEl.$eval('td:nth-child(2)', el => el.innerText);
             if (item !== "") {
                 let href = await dateEl.$eval('td:first-child a', el => el.href);
-                let url = new URL(href);
+                let url = new URL(href.toString());
                 let date = url.search.substring(1).split('&').map(day => +day.split('=')[1]);
                 holidays.push(date);
             } else {
@@ -100,7 +100,7 @@ const me = 'DUP30DHJ5';
             }
         }
 
-        console.log("Holiday lists:");
+        console.log(`${moment().format()}: Holiday lists:`);
         console.log(holidays);
     }
 
@@ -152,15 +152,14 @@ const me = 'DUP30DHJ5';
     let mobilePage = await loginJobcanMobile();
     const workingStatus = await getWorkingStatus(mobilePage);
     console.log(`${moment().format()}: workingStatus: `, workingStatus);
+
     if (!workingStatus) {
         console.log(`${moment().format()}: Can not get working status info`);
-        await browser.close();
         return false;
     }
 
     if (workingStatus === "勤務中") {
         console.log(`${moment().format()}: Working status has been set already: `, workingStatus);
-        await browser.close();
         return false;
     }
 
@@ -168,8 +167,9 @@ const me = 'DUP30DHJ5';
         await setWorkingStatus(mobilePage);
         const workingStatus = await getWorkingStatus(mobilePage);
         console.log(`${moment().format()}: Status after click: `, workingStatus);
-        await browser.close();
         await slackChat();
         await notifyMe();
     }
+
+    await browser.close();
 })();
