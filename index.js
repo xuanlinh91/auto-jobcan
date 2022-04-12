@@ -54,9 +54,13 @@ const me = 'DUP30DHJ5';
     const setWorkingStatus = async (page) => {
         console.log(`${moment().format()}: setWorkingStatus`);
         await page.waitForSelector('#adit_item_1');
+        console.log(`${moment().format()}: before click #adit_item_1`);
         await page.click('#adit_item_1');
+        console.log(`${moment().format()}: after click #adit_item_1`);
         await page.waitForSelector('input[type=submit]#yes');
+        console.log(`${moment().format()}: before submit`);
         await page.click('input[type=submit]#yes');
+        console.log(`${moment().format()}: after submit`);
     }
 
     const getWorkingStatus = async (page) => {
@@ -127,7 +131,12 @@ const me = 'DUP30DHJ5';
         });
     };
 
-
+    const screenShot = async (page) => {
+        await page.screenshot({
+            path: `./${moment().format()}.png`,
+            fullPage: true
+        });
+    }
     // let flagUrl = "https://docs.google.com/uc?export=download&id=173KRHfcTTGzDwSx0xvBSy_SmZSKOKO6K";
     // let result = await axios.get(flagUrl);
     // if (!result.data) {
@@ -165,10 +174,13 @@ const me = 'DUP30DHJ5';
 
     if (workingStatus === "未出勤") {
         await setWorkingStatus(mobilePage);
+        await screenShot(mobilePage);
         const workingStatus = await getWorkingStatus(mobilePage);
         console.log(`${moment().format()}: Status after click: `, workingStatus);
-        await slackChat();
-        await notifyMe();
+        if (workingStatus === "勤務中") {
+            await slackChat();
+            await notifyMe();
+        }
     }
 
     await browser.close();
