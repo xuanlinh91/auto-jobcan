@@ -133,7 +133,7 @@ const me = 'DUP30DHJ5';
 
     const screenShot = async (page) => {
         await page.screenshot({
-            path: `./${moment().format()}.png`,
+            path: `./screenshot/${moment().format()}.png`,
             fullPage: true
         });
     }
@@ -146,7 +146,7 @@ const me = 'DUP30DHJ5';
     // }
 
     const browser = await puppeteer.launch({
-        // headless: true, args: ["--no-sandbox"]})
+        // headless: true, args: ["--no-sandbox"]
         headless: true, executablePath: '/usr/bin/chromium-browser'
         // headless:false
     });
@@ -161,14 +161,17 @@ const me = 'DUP30DHJ5';
     let mobilePage = await loginJobcanMobile();
     const workingStatus = await getWorkingStatus(mobilePage);
     console.log(`${moment().format()}: workingStatus: `, workingStatus);
+    await screenShot(mobilePage);
 
     if (!workingStatus) {
         console.log(`${moment().format()}: Can not get working status info`);
+        await browser.close();
         return false;
     }
 
     if (workingStatus === "勤務中") {
         console.log(`${moment().format()}: Working status has been set already: `, workingStatus);
+        await browser.close();
         return false;
     }
 
