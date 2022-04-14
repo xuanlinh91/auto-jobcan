@@ -131,12 +131,13 @@ const me = 'DUP30DHJ5';
         });
     };
 
-    const screenShot = async (page) => {
-        await page.screenshot({
-            path: `./screenshot/${moment().format()}.png`,
-            fullPage: true
-        });
-    }
+    // const screenShot = async (page) => {
+    //     await page.screenshot({
+    //         path: `./screenshot/${moment().format()}.png`,
+    //         fullPage: true
+    //     });
+    // }
+
     // let flagUrl = "https://docs.google.com/uc?export=download&id=173KRHfcTTGzDwSx0xvBSy_SmZSKOKO6K";
     // let result = await axios.get(flagUrl);
     // if (!result.data) {
@@ -161,7 +162,7 @@ const me = 'DUP30DHJ5';
     let mobilePage = await loginJobcanMobile();
     const workingStatus = await getWorkingStatus(mobilePage);
     console.log(`${moment().format()}: workingStatus: `, workingStatus);
-    await screenShot(mobilePage);
+    // await screenShot(mobilePage);
 
     if (!workingStatus) {
         console.log(`${moment().format()}: Can not get working status info`);
@@ -177,7 +178,7 @@ const me = 'DUP30DHJ5';
 
     if (workingStatus === "未出勤") {
         await setWorkingStatus(mobilePage);
-        await screenShot(mobilePage);
+        // await screenShot(mobilePage);
         const workingStatus = await getWorkingStatus(mobilePage);
         console.log(`${moment().format()}: Status after click: `, workingStatus);
         if (workingStatus === "勤務中") {
