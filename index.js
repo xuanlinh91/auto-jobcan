@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer');
 const {WebClient} = require('@slack/web-api');
 const axios = require('axios');
 const moment = require("moment");
+const {TimeoutError} = require("puppeteer/lib/cjs/puppeteer/common/Errors");
 const holidays = [];
 
 const token = "xoxp-69753451537-973728075779-1585639265202-a2f1402e6a167ea2bc3197c87ef4bdde";
@@ -33,7 +34,7 @@ const me = 'DUP30DHJ5';
         await page.type('#email', "linh.nguyen@playnext-lab.co.jp")
         await page.type('#password', "cZ22u5b3")
         await page.click('button[type=submit]')
-        await page.waitForSelector('#tab')
+        await page.waitForSelector('#tab', {timeout: 5000})
         await page.goto('https://ssl.jobcan.jp/m/work/accessrecord?_m=adit')
 
         return page;
@@ -45,7 +46,7 @@ const me = 'DUP30DHJ5';
         await page.type('#user_email', "linh.nguyen@playnext-lab.co.jp")
         await page.type('#user_password', "Playnext@123")
         await page.click('.form__login')
-        await page.waitForSelector('#jbc-app-links')
+        await page.waitForSelector('#jbc-app-links', {timeout: 5000})
         await page.goto('https://ssl.jobcan.jp/jbcoauth/login');
 
         return page;
@@ -53,11 +54,11 @@ const me = 'DUP30DHJ5';
 
     const setWorkingStatus = async (page) => {
         console.log(`${moment().format()}: setWorkingStatus`);
-        await page.waitForSelector('#adit_item_1');
+        await page.waitForSelector('#adit_item_1', {timeout: 5000});
         console.log(`${moment().format()}: before click #adit_item_1`);
         await page.click('#adit_item_1');
         console.log(`${moment().format()}: after click #adit_item_1`);
-        await page.waitForSelector('input[type=submit]#yes');
+        await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
         console.log(`${moment().format()}: before submit`);
         await page.click('input[type=submit]#yes');
         console.log(`${moment().format()}: after submit`);
@@ -66,7 +67,7 @@ const me = 'DUP30DHJ5';
     const getWorkingStatus = async (page) => {
         console.log(`${moment().format()}: getWorkingStatus`);
         await page.goto('https://ssl.jobcan.jp/m/work/accessrecord?_m=adit');
-        await page.waitForSelector('#form1');
+        await page.waitForSelector('#form1', {timeout: 5000});
         let status = page.$eval('#form1 > div:nth-of-type(2)', el => el.innerHTML);
         return status;
     }
@@ -152,40 +153,49 @@ const me = 'DUP30DHJ5';
         // headless:false
     });
 
-    await getHolidays();
-    if (isHoliday(new Date())) {
-        console.log(`${moment().format()}: Today is holiday`);
-        await browser.close();
-        return false;
-    }
 
-    let mobilePage = await loginJobcanMobile();
-    const workingStatus = await getWorkingStatus(mobilePage);
-    console.log(`${moment().format()}: workingStatus: `, workingStatus);
-    // await screenShot(mobilePage);
-
-    if (!workingStatus) {
-        console.log(`${moment().format()}: Can not get working status info`);
-        await browser.close();
-        return false;
-    }
-
-    if (workingStatus === "勤務中") {
-        console.log(`${moment().format()}: Working status has been set already: `, workingStatus);
-        await browser.close();
-        return false;
-    }
-
-    if (workingStatus === "未出勤") {
-        await setWorkingStatus(mobilePage);
-        // await screenShot(mobilePage);
-        const workingStatus = await getWorkingStatus(mobilePage);
-        console.log(`${moment().format()}: Status after click: `, workingStatus);
-        if (workingStatus === "勤務中") {
-            await slackChat();
-            await notifyMe();
+    try {
+        await getHolidays();
+        if (isHoliday(new Date())) {
+            console.log(`${moment().format()}: Today is holiday`);
+            await browser.close();
+            return false;
         }
-    }
 
-    await browser.close();
+        let mobilePage = await loginJobcanMobile();
+        const workingStatus = await getWorkingStatus(mobilePage);
+        console.log(`${moment().format()}: workingStatus: `, workingStatus);
+        // await screenShot(mobilePage);
+
+        if (!workingStatus) {
+            console.log(`${moment().format()}: Can not get working status info`);
+            await browser.close();
+            return false;
+        }
+
+        if (workingStatus === "勤務中") {
+            console.log(`${moment().format()}: Working status has been set already: `, workingStatus);
+            await browser.close();
+            return false;
+        }
+
+        if (workingStatus === "未出勤") {
+            await setWorkingStatus(mobilePage);
+            // await screenShot(mobilePage);
+            const workingStatus = await getWorkingStatus(mobilePage);
+            console.log(`${moment().format()}: Status after click: `, workingStatus);
+            if (workingStatus === "勤務中") {
+                await slackChat();
+                await notifyMe();
+            }
+        }
+    } catch (e) {
+        if (e instanceof TimeoutError) {
+            console.log(`${moment().format()}: Timeout error`);
+        }
+        console.log(`${moment().format()}: error`, e.toString());
+    } finally {
+        await browser.close();
+        process.exitCode = 0;
+    }
 })();
