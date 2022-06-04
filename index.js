@@ -58,6 +58,7 @@ const me = 'DUP30DHJ5';
         console.log(`${moment().format()}: before click #adit_item_1`);
         await page.click('#adit_item_1');
         console.log(`${moment().format()}: after click #adit_item_1`);
+        await screenShot(page);
         await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
         console.log(`${moment().format()}: before submit`);
         await page.click('input[type=submit]#yes');
@@ -132,12 +133,12 @@ const me = 'DUP30DHJ5';
         });
     };
 
-    // const screenShot = async (page) => {
-    //     await page.screenshot({
-    //         path: `./screenshot/${moment().format()}.png`,
-    //         fullPage: true
-    //     });
-    // }
+    const screenShot = async (page) => {
+        await page.screenshot({
+            path: `./screenshot/${moment().format()}.png`,
+            fullPage: true
+        });
+    }
 
     // let flagUrl = "https://docs.google.com/uc?export=download&id=173KRHfcTTGzDwSx0xvBSy_SmZSKOKO6K";
     // let result = await axios.get(flagUrl);
@@ -196,6 +197,8 @@ const me = 'DUP30DHJ5';
         console.log(`${moment().format()}: error`, e.toString());
     } finally {
         await browser.close();
+        console.log(`${moment().format()}: Exit process.`);
+        console.log("");
         process.exitCode = 0;
     }
 })();
