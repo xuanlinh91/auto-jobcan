@@ -58,10 +58,20 @@ const me = 'DUP30DHJ5';
         console.log(`${moment().format()}: before click #adit_item_1`);
         await page.click('#adit_item_1');
         console.log(`${moment().format()}: after click #adit_item_1`);
-        await screenShot(page);
-        await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
-        console.log(`${moment().format()}: before submit`);
-        await page.click('input[type=submit]#yes');
+        try {
+            await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
+        } catch (e) {
+            if (e instanceof TimeoutError) {
+                console.log(`${moment().format()}: Timeout error`);
+                await screenShot(page);
+                await page.waitForSelector('.center_btn > a', {timeout: 5000});
+                await page.click('.center_btn > a');
+                await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
+            }
+        } finally {
+            console.log(`${moment().format()}: before submit`);
+            await page.click('input[type=submit]#yes');
+        }
         console.log(`${moment().format()}: after submit`);
     }
 
