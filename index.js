@@ -62,7 +62,7 @@ const me = 'DUP30DHJ5';
             await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
         } catch (e) {
             if (e instanceof TimeoutError) {
-                console.log(`${moment().format()}: Timeout error`);
+                console.log(`${moment().format()}: Timeout error trying again`);
                 await screenShot(page);
                 await page.waitForSelector('.center_btn > a', {timeout: 5000});
                 await page.click('.center_btn > a');
