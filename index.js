@@ -68,8 +68,11 @@ const me = 'DUP30DHJ5';
                 await page.click('.center_btn > a');
                 await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
             }
+            console.log("In try catch");
+            console.log(`${moment().format()}: error`, e.toString());
         } finally {
             console.log(`${moment().format()}: before submit`);
+            await screenShot(page);
             await page.click('input[type=submit]#yes');
         }
         console.log(`${moment().format()}: after submit`);
@@ -204,6 +207,7 @@ const me = 'DUP30DHJ5';
         if (e instanceof TimeoutError) {
             console.log(`${moment().format()}: Timeout error`);
         }
+        console.log("Out try catch");
         console.log(`${moment().format()}: error`, e.toString());
     } finally {
         await browser.close();
