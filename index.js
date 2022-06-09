@@ -34,7 +34,7 @@ const me = 'DUP30DHJ5';
         await page.type('#email', "linh.nguyen@playnext-lab.co.jp")
         await page.type('#password', "cZ22u5b3")
         await page.click('button[type=submit]')
-        await page.waitForSelector('#tab', {timeout: 5000})
+        await page.waitForSelector('#tab', {timeout: 10000})
         await page.goto('https://ssl.jobcan.jp/m/work/accessrecord?_m=adit')
 
         return page;
@@ -46,7 +46,7 @@ const me = 'DUP30DHJ5';
         await page.type('#user_email', "linh.nguyen@playnext-lab.co.jp")
         await page.type('#user_password', "Playnext@123")
         await page.click('.form__login')
-        await page.waitForSelector('#jbc-app-links', {timeout: 5000})
+        await page.waitForSelector('#jbc-app-links', {timeout: 10000})
         await page.goto('https://ssl.jobcan.jp/jbcoauth/login');
 
         return page;
@@ -54,19 +54,19 @@ const me = 'DUP30DHJ5';
 
     const setWorkingStatus = async (page) => {
         console.log(`${moment().format()}: setWorkingStatus`);
-        await page.waitForSelector('#adit_item_1', {timeout: 5000});
+        await page.waitForSelector('#adit_item_1', {timeout: 10000});
         console.log(`${moment().format()}: before click #adit_item_1`);
         await page.click('#adit_item_1');
         console.log(`${moment().format()}: after click #adit_item_1`);
         try {
-            await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
+            await page.waitForSelector('input[type=submit]#yes', {timeout: 10000});
         } catch (e) {
             if (e instanceof TimeoutError) {
                 console.log(`${moment().format()}: Timeout error trying again`);
                 await screenShot(page);
-                await page.waitForSelector('.center_btn > a', {timeout: 5000});
+                await page.waitForSelector('.center_btn > a', {timeout: 10000});
                 await page.click('.center_btn > a');
-                await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
+                await page.waitForSelector('input[type=submit]#yes', {timeout: 10000});
             }
             console.log("In try catch");
             console.log(`${moment().format()}: error`, e.toString());
@@ -81,7 +81,7 @@ const me = 'DUP30DHJ5';
     const getWorkingStatus = async (page) => {
         console.log(`${moment().format()}: getWorkingStatus`);
         await page.goto('https://ssl.jobcan.jp/m/work/accessrecord?_m=adit');
-        await page.waitForSelector('#form1', {timeout: 5000});
+        await page.waitForSelector('#form1', {timeout: 10000});
         let status = page.$eval('#form1 > div:nth-of-type(2)', el => el.innerHTML);
         return status;
     }
