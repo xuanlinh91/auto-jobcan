@@ -148,7 +148,8 @@ const me = 'DUP30DHJ5';
 
     const screenShot = async (page) => {
         await page.screenshot({
-            path: `./screenshot/${moment().format()}.png`,
+            // path: `./screenshot/${moment().format()}.png`,
+            path: `~/auto-jobcan/screenshot/${moment().format()}.png`,
             fullPage: true
         });
     }
