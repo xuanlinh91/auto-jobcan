@@ -72,7 +72,7 @@ const me = 'DUP30DHJ5';
             console.log(`${moment().format()}: error`, e.toString());
         } finally {
             console.log(`${moment().format()}: before submit`);
-            await screenShot(page);
+            // await screenShot(page);
             await page.click('input[type=submit]#yes');
         }
         console.log(`${moment().format()}: after submit`);
