@@ -59,8 +59,13 @@ const me = 'DUP30DHJ5';
         await page.click('#adit_item_1');
         console.log(`${moment().format()}: after click #adit_item_1`);
         try {
+            await page.waitForSelector('.center_btn > a', {timeout: 20000});
+            await page.click('.center_btn > a');
             await page.waitForSelector('input[type=submit]#yes', {timeout: 10000});
         } catch (e) {
+            console.log("In try catch");
+            console.log(`${moment().format()}: error`, e.toString());
+
             if (e instanceof TimeoutError) {
                 console.log(`${moment().format()}: Timeout error trying again`);
                 // await screenShot(page);
@@ -68,8 +73,6 @@ const me = 'DUP30DHJ5';
                 await page.click('.center_btn > a');
                 await page.waitForSelector('input[type=submit]#yes', {timeout: 10000});
             }
-            console.log("In try catch");
-            console.log(`${moment().format()}: error`, e.toString());
         } finally {
             console.log(`${moment().format()}: before submit`);
             // await screenShot(page);
@@ -139,11 +142,11 @@ const me = 'DUP30DHJ5';
             channel: mySelfChannel,
         });
 
-        await bot.chat.postMessage({
-            text: 'おはようございます。本日の業務を開始いたします。',
-            // link_names: true,
-            channel: me,
-        });
+        // await bot.chat.postMessage({
+        //     text: 'おはようございます。本日の業務を開始いたします。',
+        //     // link_names: true,
+        //     channel: me,
+        // });
     };
 
     const screenShot = async (page) => {
