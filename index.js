@@ -59,8 +59,9 @@ const me = 'DUP30DHJ5';
         await page.click('#adit_item_1');
         console.log(`${moment().format()}: after click #adit_item_1`);
         try {
-            await page.waitForSelector('.center_btn > a', {timeout: 20000});
-            await page.click('.center_btn > a');
+            console.log("In try catch");
+            // await page.waitForSelector('.center_btn > a', {timeout: 20000});
+            // await page.click('.center_btn > a');
             await page.waitForSelector('input[type=submit]#yes', {timeout: 10000});
         } catch (e) {
             console.log("In try catch");
