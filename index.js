@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
+const fs = require('fs');
 const {WebClient} = require('@slack/web-api');
-const axios = require('axios');
 const moment = require("moment");
 const {TimeoutError} = require("puppeteer/lib/cjs/puppeteer/common/Errors");
 const holidays = [];
@@ -58,14 +58,8 @@ const me = 'DUP30DHJ5';
         await page.click('#adit_item_1');
         try {
             console.log("In try");
-            // await page.waitForSelector('.center_btn > a.btn_image_wide', {timeout: 5000});
-            // await page.click('.center_btn > a.btn_image_wide');
-            // await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
-
-            const exists1 = await page.$eval('.center_btn > a.btn_image_wide', () => true).catch(() => false);
-            const data = await page.evaluate(() => document.querySelector('*').outerHTML);
-            console.log(exists1);
-            console.log(data);
+            await page.$eval('.center_btn > a.btn_image_wide', () => true).catch(() => false);
+            await page.click('.center_btn > a.btn_image_wide');
         } catch (e) {
             console.log("In catch");
             console.log(`${moment().format()}: error`, e.toString());
@@ -78,7 +72,6 @@ const me = 'DUP30DHJ5';
             }
         } finally {
             console.log(`${moment().format()}: before submit`);
-            // await screenShot(page);
             // await page.click('input[type=submit]#yes');
         }
         console.log(`${moment().format()}: after submit`);
@@ -153,10 +146,12 @@ const me = 'DUP30DHJ5';
     };
 
     const screenShot = async (page) => {
-        await page.screenshot({
-            // path: `./screenshot/${moment().format()}.png`,
-            path: `~/`,
-            fullPage: true
+        const data = await page.evaluate(() => document.querySelector('*').outerHTML);
+        fs.writeFile(`~/auto-jobcan/screenshot/${moment().format()}.html`, data, function(err) {
+            if(err) {
+                return console.log(err);
+            }
+            console.log("Html file was saved!");
         });
     }
 
