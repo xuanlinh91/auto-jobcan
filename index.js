@@ -55,25 +55,25 @@ const me = 'DUP30DHJ5';
     const setWorkingStatus = async (page) => {
         console.log(`${moment().format()}: setWorkingStatus`);
         await page.waitForSelector('#adit_item_1', {timeout: 10000});
-        console.log(`${moment().format()}: before click #adit_item_1`);
         await page.click('#adit_item_1');
-        console.log(`${moment().format()}: after click #adit_item_1`);
         try {
             console.log("In try");
             // await page.waitForSelector('.center_btn > a', {timeout: 20000});
             // await page.click('.center_btn > a');
             // await page.waitForSelector('input[type=submit]#yes', {timeout: 10000});
-
-            await page.waitForSelector('.center_btn > a.btn_image_wide', {timeout: 20000});
+            await screenShot(page);
+            await page.waitForSelector('.center_btn > a.btn_image_wide', {timeout: 5000});
             await page.click('.center_btn > a.btn_image_wide');
-            await page.waitForSelector('input[type=submit]#yes', {timeout: 10000});
+            await screenShot(page);
+            await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
         } catch (e) {
             console.log("In catch");
+            await screenShot(page);
             console.log(`${moment().format()}: error`, e.toString());
 
             if (e instanceof TimeoutError) {
                 console.log(`${moment().format()}: Timeout error trying again`);
-                // await screenShot(page);
+                await screenShot(page);
                 await page.waitForSelector('.center_btn > a.btn_image_wide', {timeout: 20000});
                 await page.click('.center_btn > a.btn_image_wide');
                 await page.waitForSelector('input[type=submit]#yes', {timeout: 10000});
@@ -157,7 +157,7 @@ const me = 'DUP30DHJ5';
     const screenShot = async (page) => {
         await page.screenshot({
             // path: `./screenshot/${moment().format()}.png`,
-            path: `~/auto-jobcan/screenshot/${moment().format()}.png`,
+            path: `~/`,
             fullPage: true
         });
     }
