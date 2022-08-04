@@ -58,6 +58,7 @@ const me = 'DUP30DHJ5';
         await page.click('#adit_item_1');
         try {
             console.log("In try");
+            await screenShot(page);
             await page.$eval('.center_btn > a.btn_image_wide', () => true).catch(() => false);
             await page.click('.center_btn > a.btn_image_wide');
         } catch (e) {
