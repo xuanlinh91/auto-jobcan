@@ -58,22 +58,15 @@ const me = 'DUP30DHJ5';
         await page.click('#adit_item_1');
         try {
             console.log("In try");
-            // await page.waitForSelector('.center_btn > a', {timeout: 20000});
-            // await page.click('.center_btn > a');
-            // await page.waitForSelector('input[type=submit]#yes', {timeout: 10000});
-            await screenShot(page);
-            await page.waitForSelector('.center_btn > a.btn_image_wide', {timeout: 5000});
-            await page.click('.center_btn > a.btn_image_wide');
-            await screenShot(page);
+            // await page.waitForSelector('.center_btn > a.btn_image_wide', {timeout: 5000});
+            // await page.click('.center_btn > a.btn_image_wide');
             await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
         } catch (e) {
             console.log("In catch");
-            await screenShot(page);
             console.log(`${moment().format()}: error`, e.toString());
 
             if (e instanceof TimeoutError) {
                 console.log(`${moment().format()}: Timeout error trying again`);
-                await screenShot(page);
                 await page.waitForSelector('.center_btn > a.btn_image_wide', {timeout: 20000});
                 await page.click('.center_btn > a.btn_image_wide');
                 await page.waitForSelector('input[type=submit]#yes', {timeout: 10000});
@@ -81,7 +74,7 @@ const me = 'DUP30DHJ5';
         } finally {
             console.log(`${moment().format()}: before submit`);
             // await screenShot(page);
-            await page.click('input[type=submit]#yes');
+            // await page.click('input[type=submit]#yes');
         }
         console.log(`${moment().format()}: after submit`);
     }
@@ -208,7 +201,7 @@ const me = 'DUP30DHJ5';
             const workingStatus = await getWorkingStatus(mobilePage);
             console.log(`${moment().format()}: Status after click: `, workingStatus);
             if (workingStatus === "勤務中") {
-                await slackChat();
+                // await slackChat();
                 await notifyMe();
             }
         }
