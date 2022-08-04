@@ -60,7 +60,12 @@ const me = 'DUP30DHJ5';
             console.log("In try");
             // await page.waitForSelector('.center_btn > a.btn_image_wide', {timeout: 5000});
             // await page.click('.center_btn > a.btn_image_wide');
-            await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
+            // await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
+
+            const exists1 = await page.$eval('.center_btn > a.btn_image_wide', () => true).catch(() => false);
+            const data = await page.evaluate(() => document.querySelector('*').outerHTML);
+            console.log(exists1);
+            console.log(data);
         } catch (e) {
             console.log("In catch");
             console.log(`${moment().format()}: error`, e.toString());
