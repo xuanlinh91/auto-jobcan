@@ -58,11 +58,11 @@ const me = 'DUP30DHJ5';
         await page.click('#adit_item_1');
         try {
             console.log("In try");
-            await screenShot(page);
             await page.$eval('.center_btn > a.btn_image_wide', () => true).catch(() => false);
             await page.click('.center_btn > a.btn_image_wide');
         } catch (e) {
             console.log("In catch");
+            await screenShot(page);
             console.log(`${moment().format()}: error`, e.toString());
 
             if (e instanceof TimeoutError) {
@@ -148,12 +148,13 @@ const me = 'DUP30DHJ5';
 
     const screenShot = async (page) => {
         const data = await page.evaluate(() => document.querySelector('*').outerHTML);
-        fs.writeFile(`~/auto-jobcan/screenshot/${moment().format()}.html`, data, function(err) {
-            if(err) {
-                return console.log(err);
-            }
-            console.log("Html file was saved!");
-        });
+        console.log(data);
+        // fs.writeFile(`~/auto-jobcan/screenshot/${moment().format()}.html`, data, function(err) {
+        //     if(err) {
+        //         return console.log(err);
+        //     }
+        //     console.log("Html file was saved!");
+        // });
     }
 
     // let flagUrl = "https://docs.google.com/uc?export=download&id=173KRHfcTTGzDwSx0xvBSy_SmZSKOKO6K";
