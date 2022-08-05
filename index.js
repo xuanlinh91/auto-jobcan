@@ -79,6 +79,7 @@ const me = 'DUP30DHJ5';
             }
         } finally {
             console.log(`${moment().format()}: before submit`);
+            await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
             await page.click('input[type=submit]#yes');
         }
         console.log(`${moment().format()}: after submit`);
@@ -177,8 +178,8 @@ const me = 'DUP30DHJ5';
     // }
 
     const browser = await puppeteer.launch({
-        // headless: true, args: ["--no-sandbox"]
-        headless: true, executablePath: '/usr/bin/chromium-browser'
+        headless: true, args: ["--no-sandbox"]
+        // headless: true, executablePath: '/usr/bin/chromium-browser'
         // headless:false
     });
 
