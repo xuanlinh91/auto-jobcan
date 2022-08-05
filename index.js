@@ -58,22 +58,28 @@ const me = 'DUP30DHJ5';
         await page.click('#adit_item_1');
         try {
             console.log("In try");
-            await page.$eval('.center_btn > a.btn_image_wide', () => true).catch(() => false);
-            await page.click('.center_btn > a.btn_image_wide');
+            await page.waitForSelector('.center_btn > a', {timeout: 20000});
+            const flag = await page.$eval('#lat_str', () => true).catch(() => false);
+            if (flag === true) {
+                await page.waitForFunction('document.querySelector("#lat_str").innerText != "計測中"');
+                await page.click('.center_btn > a');
+            } else {
+                const flag2 = await page.$eval('input[type=submit]#yes', () => true).catch(() => false);
+                console.log("flag2 ",flag2);
+            }
         } catch (e) {
             console.log("In catch");
-            await screenShot(page);
             console.log(`${moment().format()}: error`, e.toString());
 
             if (e instanceof TimeoutError) {
                 console.log(`${moment().format()}: Timeout error trying again`);
-                await page.waitForSelector('.center_btn > a.btn_image_wide', {timeout: 20000});
-                await page.click('.center_btn > a.btn_image_wide');
+                await page.waitForSelector('.center_btn > a', {timeout: 20000});
+                await page.click('.center_btn > a');
                 await page.waitForSelector('input[type=submit]#yes', {timeout: 10000});
             }
         } finally {
             console.log(`${moment().format()}: before submit`);
-            // await page.click('input[type=submit]#yes');
+            await page.click('input[type=submit]#yes');
         }
         console.log(`${moment().format()}: after submit`);
     }
@@ -147,14 +153,19 @@ const me = 'DUP30DHJ5';
     };
 
     const screenShot = async (page) => {
-        const data = await page.evaluate(() => document.querySelector('*').outerHTML);
-        console.log(data);
+        // const data = await page.evaluate(() => document.querySelector('*').outerHTML);
+        // console.log(data);
         // fs.writeFile(`~/auto-jobcan/screenshot/${moment().format()}.html`, data, function(err) {
         //     if(err) {
         //         return console.log(err);
         //     }
         //     console.log("Html file was saved!");
         // });
+
+        await page.screenshot({
+            path: `./screenshot/${moment().format()}.png`,
+            fullPage: true
+        });
     }
 
     // let flagUrl = "https://docs.google.com/uc?export=download&id=173KRHfcTTGzDwSx0xvBSy_SmZSKOKO6K";
@@ -203,7 +214,7 @@ const me = 'DUP30DHJ5';
             const workingStatus = await getWorkingStatus(mobilePage);
             console.log(`${moment().format()}: Status after click: `, workingStatus);
             if (workingStatus === "勤務中") {
-                // await slackChat();
+                await slackChat();
                 await notifyMe();
             }
         }
