@@ -178,8 +178,8 @@ const me = 'DUP30DHJ5';
     // }
 
     const browser = await puppeteer.launch({
-        headless: true, args: ["--no-sandbox"]
-        // headless: true, executablePath: '/usr/bin/chromium-browser'
+        // headless: true, args: ["--no-sandbox"]
+        headless: true, executablePath: '/usr/bin/chromium-browser'
         // headless:false
     });
 
