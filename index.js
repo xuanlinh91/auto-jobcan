@@ -15,9 +15,6 @@ const conversationId = 'GGE3NAENR';
 
 const mySelfChannel = 'G01HPH3Q1ND';
 
-const me = 'DUP30DHJ5';
-// const conversationId = 'DUP30DHJ5';
-
 (async () => {
     const loginJobcanMobile = async () => {
         let page = await browser.newPage();
@@ -25,7 +22,7 @@ const me = 'DUP30DHJ5';
         const context = browser.defaultBrowserContext()
         await context.overridePermissions("https://ssl.jobcan.jp/m/work/accessrecord?_m=adit", ['geolocation'])
         //set the location to your home
-        await page.setGeolocation({latitude: 35.66204275692751, longitude: 139.86570839565226})
+        await page.setGeolocation({latitude: 35.66566299742501, longitude: 139.85717953806378})
         const devices = puppeteer.devices;
         const iPhone = devices['iPhone 7'];
         await page.emulate(iPhone);
@@ -145,12 +142,6 @@ const me = 'DUP30DHJ5';
             link_names: true,
             channel: mySelfChannel,
         });
-
-        // await bot.chat.postMessage({
-        //     text: 'おはようございます。本日の業務を開始いたします。',
-        //     // link_names: true,
-        //     channel: me,
-        // });
     };
 
     const screenShot = async (page) => {
@@ -162,11 +153,6 @@ const me = 'DUP30DHJ5';
         //     }
         //     console.log("Html file was saved!");
         // });
-
-        await page.screenshot({
-            path: `./screenshot/${moment().format()}.png`,
-            fullPage: true
-        });
     }
 
     // let flagUrl = "https://docs.google.com/uc?export=download&id=173KRHfcTTGzDwSx0xvBSy_SmZSKOKO6K";
@@ -178,8 +164,8 @@ const me = 'DUP30DHJ5';
     // }
 
     const browser = await puppeteer.launch({
-        // headless: true, args: ["--no-sandbox"]
-        headless: true, executablePath: '/usr/bin/chromium-browser'
+        // headless: true, executablePath: '/usr/bin/chromium-browser'
+        headless: false, args: ["--no-sandbox"]
         // headless:false
     });
 
@@ -195,7 +181,6 @@ const me = 'DUP30DHJ5';
         let mobilePage = await loginJobcanMobile();
         const workingStatus = await getWorkingStatus(mobilePage);
         console.log(`${moment().format()}: workingStatus: `, workingStatus);
-        // await screenShot(mobilePage);
 
         if (!workingStatus) {
             console.log(`${moment().format()}: Can not get working status info`);
@@ -210,12 +195,11 @@ const me = 'DUP30DHJ5';
         }
 
         if (workingStatus === "未出勤") {
-            await setWorkingStatus(mobilePage);
-            // await screenShot(mobilePage);
+            // await setWorkingStatus(mobilePage);
             const workingStatus = await getWorkingStatus(mobilePage);
             console.log(`${moment().format()}: Status after click: `, workingStatus);
             if (workingStatus === "勤務中") {
-                await slackChat();
+                // await slackChat();
                 await notifyMe();
             }
         }
@@ -228,7 +212,6 @@ const me = 'DUP30DHJ5';
     } finally {
         await browser.close();
         console.log(`${moment().format()}: Exit process.`);
-        console.log("");
         process.exitCode = 0;
     }
 })();

@@ -18,9 +18,9 @@
   "homepage": "https://github.com/xuanlinh91/auto-jobcan#readme",
   "dependencies": {
     "@slack/web-api": "^5.14.0",
-    "axios": "^0.21.0",
+    "axios": "^1.1.2",
     "jsonp": "^0.2.1",
     "moment": "^2.29.1",
-    "puppeteer": "^5.5.0"
+    "puppeteer": "^18.2.1"
   }
 }
