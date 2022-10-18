@@ -164,8 +164,8 @@ const mySelfChannel = 'G01HPH3Q1ND';
     // }
 
     const browser = await puppeteer.launch({
-        // headless: true, executablePath: '/usr/bin/chromium-browser'
-        headless: false, args: ["--no-sandbox"]
+        headless: true, executablePath: '/usr/bin/chromium-browser'
+        // headless: false, args: ["--no-sandbox"]
         // headless:false
     });
 
