@@ -2,7 +2,6 @@ const puppeteer = require('puppeteer');
 const fs = require('fs');
 const {WebClient} = require('@slack/web-api');
 const moment = require("moment");
-const {TimeoutError} = require("puppeteer/lib/cjs/puppeteer/common/Errors");
 const holidays = [];
 
 const token = "xoxp-69753451537-973728075779-1585639265202-a2f1402e6a167ea2bc3197c87ef4bdde";
@@ -68,7 +67,7 @@ const mySelfChannel = 'G01HPH3Q1ND';
             console.log("In catch");
             console.log(`${moment().format()}: error`, e.toString());
 
-            if (e instanceof TimeoutError) {
+            if (e instanceof puppeteer.TimeoutError) {
                 console.log(`${moment().format()}: Timeout error trying again`);
                 await page.waitForSelector('.center_btn > a', {timeout: 20000});
                 await page.click('.center_btn > a');
@@ -204,7 +203,7 @@ const mySelfChannel = 'G01HPH3Q1ND';
             }
         }
     } catch (e) {
-        if (e instanceof TimeoutError) {
+        if (e instanceof puppeteer.TimeoutError) {
             console.log(`${moment().format()}: Timeout error`);
         }
         console.log("Out try catch");
