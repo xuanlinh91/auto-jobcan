@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer');
-const fs = require('fs');
 const {WebClient} = require('@slack/web-api');
 const moment = require("moment");
 const holidays = [];
@@ -163,9 +162,9 @@ const mySelfChannel = 'G01HPH3Q1ND';
     // }
 
     const browser = await puppeteer.launch({
-        // headless: true, executablePath: '/usr/bin/chromium-browser'
+        headless: true, executablePath: '/usr/bin/chromium-browser'
         // headless: false, args: ["--no-sandbox"]
-        headless:false
+        // headless:false
     });
 
 
