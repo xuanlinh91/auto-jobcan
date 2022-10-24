@@ -163,9 +163,9 @@ const mySelfChannel = 'G01HPH3Q1ND';
     // }
 
     const browser = await puppeteer.launch({
-        headless: true, executablePath: '/usr/bin/chromium-browser'
+        // headless: true, executablePath: '/usr/bin/chromium-browser'
         // headless: false, args: ["--no-sandbox"]
-        // headless:false
+        headless:false
     });
 
 
@@ -194,7 +194,7 @@ const mySelfChannel = 'G01HPH3Q1ND';
         }
 
         if (workingStatus === "未出勤") {
-            // await setWorkingStatus(mobilePage);
+            await setWorkingStatus(mobilePage);
             const workingStatus = await getWorkingStatus(mobilePage);
             console.log(`${moment().format()}: Status after click: `, workingStatus);
             if (workingStatus === "勤務中") {
