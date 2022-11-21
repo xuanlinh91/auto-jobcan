@@ -57,6 +57,7 @@ const mySelfChannel = 'G01HPH3Q1ND';
             const flag = await page.$eval('#lat_str', () => true).catch(() => false);
             if (flag === true) {
                 await page.waitForFunction('document.querySelector("#lat_str").innerText != "計測中"');
+                // await screenShot(page)
                 await page.click('.center_btn > a');
             } else {
                 const flag2 = await page.$eval('input[type=submit]#yes', () => true).catch(() => false);
@@ -74,6 +75,7 @@ const mySelfChannel = 'G01HPH3Q1ND';
             }
         } finally {
             console.log(`${moment().format()}: before submit`);
+            // await screenShot(page);
             await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
             await page.click('input[type=submit]#yes');
         }
@@ -145,11 +147,16 @@ const mySelfChannel = 'G01HPH3Q1ND';
     const screenShot = async (page) => {
         // const data = await page.evaluate(() => document.querySelector('*').outerHTML);
         // console.log(data);
-        // fs.writeFile(`~/auto-jobcan/screenshot/${moment().format()}.html`, data, function(err) {
+        // fs.writeFile(`~/a-can/screenshot/${moment().format()}.html`, data, function(err) {
         //     if(err) {
         //         return console.log(err);
         //     }
         //     console.log("Html file was saved!");
+        // });
+
+        // await page.screenshot({
+        //     path: `./screenshot/${moment().format()}.png`,
+        //     fullPage: true
         // });
     }
 
@@ -164,7 +171,7 @@ const mySelfChannel = 'G01HPH3Q1ND';
     const browser = await puppeteer.launch({
         headless: true, executablePath: '/usr/bin/chromium-browser'
         // headless: false, args: ["--no-sandbox"]
-        // headless:false
+        // headless:true
     });
 
 
@@ -197,14 +204,14 @@ const mySelfChannel = 'G01HPH3Q1ND';
             const workingStatus = await getWorkingStatus(mobilePage);
             console.log(`${moment().format()}: Status after click: `, workingStatus);
             if (workingStatus === "勤務中") {
-                // await slackChat();
+                await slackChat();
                 await notifyMe();
             }
         }
     } catch (e) {
-        if (e instanceof puppeteer.TimeoutError) {
-            console.log(`${moment().format()}: Timeout error`);
-        }
+        // if (e instanceof puppeteer.TimeoutError) {
+        //     console.log(`${moment().format()}: Timeout error`);
+        // }
         console.log("Out try catch");
         console.log(`${moment().format()}: error`, e.toString());
     } finally {

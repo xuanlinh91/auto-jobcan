@@ -1,5 +1,5 @@
 {
-  "name": "auto-jobcan",
+  "name": "a-can",
   "version": "1.0.0",
   "description": "my auto jobcan",
   "main": "index.js",
@@ -8,19 +8,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/xuanlinh91/auto-jobcan.git"
+    "url": "git+ssh://git@github.com/xuanlinh91/a-can.git"
   },
   "author": "Nguyen Xuan Linh <linh.nguyen@playnext-lab.co.jp> (https://github.com/linhnguyen-pnl)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/xuanlinh91/auto-jobcan/issues"
+    "url": "https://github.com/xuanlinh91/a-can/issues"
   },
-  "homepage": "https://github.com/xuanlinh91/auto-jobcan#readme",
+  "homepage": "https://github.com/xuanlinh91/a-can#readme",
   "dependencies": {
     "@slack/web-api": "^5.14.0",
     "axios": "^1.1.2",
     "jsonp": "^0.2.1",
     "moment": "^2.29.1",
-    "puppeteer": "^18.2.1"
+    "puppeteer": "^10.0.0"
   }
 }
