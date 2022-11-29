@@ -57,7 +57,7 @@ const mySelfChannel = 'G01HPH3Q1ND';
             const flag = await page.$eval('#lat_str', () => true).catch(() => false);
             if (flag === true) {
                 await page.waitForFunction('document.querySelector("#lat_str").innerText != "計測中"');
-                // await screenShot(page)
+                await screenShot(page)
                 await page.click('.center_btn > a');
             } else {
                 const flag2 = await page.$eval('input[type=submit]#yes', () => true).catch(() => false);
@@ -75,11 +75,13 @@ const mySelfChannel = 'G01HPH3Q1ND';
             }
         } finally {
             console.log(`${moment().format()}: before submit`);
-            // await screenShot(page);
+            await screenShot(page);
             await page.waitForSelector('input[type=submit]#yes', {timeout: 5000});
             await page.click('input[type=submit]#yes');
+            await screenShot(page);
         }
         console.log(`${moment().format()}: after submit`);
+        // await page.waitForNavigation();
     }
 
     const getWorkingStatus = async (page) => {
@@ -138,10 +140,11 @@ const mySelfChannel = 'G01HPH3Q1ND';
 
     const notifyMe = async () => {
         const result = await bot.chat.postMessage({
-            text: '<@UUMME27NX>　おはようございます。本日の業務を開始いたします。',
+            text: '<@UUMME27NX>　おはようございます。本日の業務を開始いたします。- myself',
             link_names: true,
             channel: mySelfChannel,
         });
+        console.log(`${moment().format()}: Successfully send message ${result.ts} to myself channel`);
     };
 
     const screenShot = async (page) => {
@@ -154,10 +157,8 @@ const mySelfChannel = 'G01HPH3Q1ND';
         //     console.log("Html file was saved!");
         // });
 
-        // await page.screenshot({
-        //     path: `./screenshot/${moment().format()}.png`,
-        //     fullPage: true
-        // });
+        // const today = new Date().toISOString().slice(0, 10);
+        await page.screenshot({ path: moment().format() + '.png', fullPage: true });
     }
 
     // let flagUrl = "https://docs.google.com/uc?export=download&id=173KRHfcTTGzDwSx0xvBSy_SmZSKOKO6K";
